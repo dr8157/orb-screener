@@ -1,0 +1,55 @@
+# ======================
+# Sensitive / Secrets
+# ======================
+credentials.json
+token.txt
+
+# ======================
+# Python
+# ======================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+
+# Virtual Environments
+.venv/
+venv/
+env/
+ENV/
+
+# ======================
+# Node.js / Frontend
+# ======================
+node_modules/
+frontend/node_modules/
+frontend/dist/
+
+# ======================
+# IDE / Editor
+# ======================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ======================
+# Logs
+# ======================
+*.log
+npm-debug.log*
+
+# ======================
+# Environment files
+# ======================
+.env
+.env.local
+.env.production
