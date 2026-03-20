@@ -27,13 +27,22 @@ export const useConfig = () => {
         }
     }, []);
 
-    // Update config on backend
+    // Update config on backend (requires admin password)
     const updateConfig = useCallback(async (newConfig) => {
+        const password = prompt('Enter admin password to save changes:');
+        if (!password) {
+            setError('Password required to save configuration');
+            return false;
+        }
+
         setIsLoading(true);
         try {
             const response = await fetch(API_ENDPOINTS.config, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Admin-Password': password,
+                },
                 body: JSON.stringify(newConfig),
             });
 
@@ -42,6 +51,9 @@ export const useConfig = () => {
                 setConfig(data.config || newConfig);
                 setError(null);
                 return true;
+            } else if (response.status === 403) {
+                setError('Wrong password. Only admin can change settings.');
+                return false;
             }
             return false;
         } catch (err) {

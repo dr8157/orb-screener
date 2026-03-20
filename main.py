@@ -12,10 +12,13 @@ from datetime import datetime, time as dt_time
 from typing import Dict, List, Set, Optional, Any
 from zoneinfo import ZoneInfo
 
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import uvicorn
+
+# Admin password for config changes
+ADMIN_PASSWORD = "orb@deepak2026"
 
 from models import (
     ScreenerConfig,
@@ -534,25 +537,29 @@ async def get_config():
 
 
 @app.post("/api/config")
-async def update_config(new_config: Dict[str, Any]):
-    """Update configuration"""
+async def update_config(new_config: Dict[str, Any], x_admin_password: Optional[str] = Header(None)):
+    """Update configuration - requires admin password"""
     global config
-    
+
+    # Check admin password
+    if x_admin_password != ADMIN_PASSWORD:
+        raise HTTPException(status_code=403, detail="Unauthorized: Invalid admin password")
+
     try:
         # Update only provided fields
         current = config.model_dump()
         current.update(new_config)
         config = ScreenerConfig(**current)
-        
+
         # Update engines
         if baseline_engine:
             baseline_engine.update_config(config)
         if scoring_engine:
             scoring_engine.update_config(config)
-        
+
         logger.info(f"Configuration updated: {new_config}")
         return {"status": "success", "config": config.model_dump()}
-        
+
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
