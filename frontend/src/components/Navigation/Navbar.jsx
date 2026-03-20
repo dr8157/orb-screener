@@ -17,6 +17,15 @@ const Navbar = ({
 }) => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+    const handleAdminClick = () => {
+        const password = prompt('Enter admin password:');
+        if (password === 'orb@deepak2026') {
+            onAdminClick?.();
+        } else if (password !== null) {
+            alert('Wrong password. Access denied.');
+        }
+    };
+
 
     const formatTime = (date) => {
         if (!date) return '--:--:--';
@@ -95,7 +104,7 @@ const Navbar = ({
 
                         {/* Admin Button */}
                         <button
-                            onClick={onAdminClick}
+                            onClick={handleAdminClick}
                             className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl bg-black/40 border border-gray-800/50 text-gray-400 hover:text-[#a855f7] hover:border-[#a855f7]/30 transition-all backdrop-blur"
                             title="Admin Settings"
                         >
@@ -146,7 +155,7 @@ const Navbar = ({
                         <div className="grid grid-cols-2 gap-2">
                             <button
                                 onClick={() => {
-                                    onAdminClick?.();
+                                    handleAdminClick();
                                     setIsMobileMenuOpen(false);
                                 }}
                                 className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-black/40 border border-gray-800/50 text-gray-400 hover:text-[#a855f7] hover:border-[#a855f7]/30 transition-all"
